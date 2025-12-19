@@ -1,0 +1,55 @@
+image:
+  repository: your-registry/pysemdist
+  tag: "0.2.0"
+  pullPolicy: IfNotPresent
+
+replicaCount: 1
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    cpu: "1"
+    memory: 1Gi
+
+service:
+  type: ClusterIP
+  port: 80
+
+env:
+  DB_HOST: "localhost"
+  DB_PORT: "5439"
+  DB_NAME: "analytics"
+  DB_USER: "service_user"
+  # DB_PASSWORD via secretRef
+  DB_POOL_MIN: "1"
+  DB_POOL_MAX: "10"
+  DB_CONNECT_TIMEOUT: "10"
+  DB_STATEMENT_TIMEOUT_MS: "60000"
+  S3_BUCKET: "your-bucket"
+  S3_PREFIX: "pysemdist/exports"
+  S3_UPLOAD: "false"  # set to 'true' to enable real uploads
+
+secretRefs:
+  DB_PASSWORD:
+    name: pysemdist-secrets
+    key: DB_PASSWORD
+
+persistence:
+  enabled: false
+  size: 1Gi
+  storageClassName: ""
+
+ollama:
+  enabled: true
+  image: "ollama/ollama:latest"
+  model: "yi:9b"
+  pull_on_start: true
+  resources:
+    requests:
+      cpu: 500m
+      memory: 1Gi
+    limits:
+      cpu: "2"
+      memory: 4Gi

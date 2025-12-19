@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pysemdist
+  labels: { app: pysemdist }
+spec:
+  replicas: 1
+  selector:
+    matchLabels: { app: pysemdist }
+  template:
+    metadata:
+      labels: { app: pysemdist }
+    spec:
+      containers:
+        - name: api
+          image: your-registry/pysemdist:0.2.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8000
+          env:
+            - name: DB_HOST
+              value: "localhost"
+            - name: DB_PORT
+              value: "5439"
+            - name: DB_NAME
+              value: "analytics"
+            - name: DB_USER
+              value: "service_user"
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pysemdist-secrets
+                  key: DB_PASSWORD
+            - name: DB_POOL_MIN
+              value: "1"
+            - name: DB_POOL_MAX
+              value: "10"
+            - name: DB_CONNECT_TIMEOUT
+              value: "10"
+            - name: DB_STATEMENT_TIMEOUT_MS
+              value: "60000"
+            - name: S3_BUCKET
+              value: "your-bucket"
+            - name: S3_PREFIX
+              value: "pysemdist/exports"
+            - name: S3_UPLOAD
+              value: "true"
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8000
+            initialDelaySeconds: 3
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "1"
+              memory: "1Gi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pysemdist
+  labels: { app: pysemdist }
+spec:
+  type: ClusterIP
+  selector: { app: pysemdist }
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8000

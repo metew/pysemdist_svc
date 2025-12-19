@@ -1,0 +1,80 @@
+# -------------------------
+# Python / FastAPI Project
+# -------------------------
+
+# Bytecode / cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+env/
+venv/
+ENV/
+env.bak/
+
+# Build / packaging
+*.egg-info/
+*.egg
+build/
+dist/
+.eggs/
+pip-wheel-metadata/
+
+# Logs / coverage
+*.log
+*.out
+*.err
+*.pid
+.coverage
+htmlcov/
+.tox/
+.pytest_cache/
+.cache/
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+
+# IDE / Editor settings
+.vscode/
+.idea/
+*.swp
+*.swo
+*.bak
+.DS_Store
+
+# Data / generated output
+data/
+!data/.gitkeep
+notebooks/
+outputs/
+*.csv
+*.parquet
+*.tsv
+
+# Environment / credentials
+.env
+.env.*
+*.env
+*.ini
+*.cfg
+
+# Docker / K8s
+*.tar
+docker-compose.override.yml
+.kube/
+helm/pysemdist/charts/
+
+# Temporary / local
+tmp/
+temp/
+*.tmp
+*~
+*.orig
+*.bak
+
+# -------------------------
+# End of .gitignore
+# -------------------------
